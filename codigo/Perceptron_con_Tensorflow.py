@@ -18,6 +18,8 @@
 
 import tensorflow as tf
 import matplotlib.pyplot as plt
+tf=tf.compat.v1
+tf.disable_eager_execution()
 
 
 class Tensorflow:
@@ -129,29 +131,28 @@ class Tensorflow:
 
         self.sesion.close()
 
-    @staticmethod
-    def inicio():
-        Tensorflow.entrada()
-        Tensorflow.salida()
-        Tensorflow.peso()
-        Tensorflow.sesgo()
-        Tensorflow.sumaPonderada()
-        Tensorflow.adicion()
-        Tensorflow.fActivacion()
-        Tensorflow.fError()
-        Tensorflow.descensoGradiente()
+    def inicio(self):
+        self.entrada()
+        self.salida()
+        self.peso()
+        self.sesgo()
+        self.sumaPonderada()
+        self.adicion()
+        self.fActivacion()
+        self.fError()
+        self.descensoGradiente()
 
-    @staticmethod
-    def aprendizaje():
-        Tensorflow.inicializacion()
-        Tensorflow.grafica()
-        Tensorflow.aprendizaje1()
-        Tensorflow.visualizacion()
+    def aprendizaje(self):
+        self.inicializacion()
+        self.grafica()
+        self.aprendizaje1()
+        self.visualizacion()
 
     @staticmethod
     def ejecutar():
-        Tensorflow.inicio()
-        Tensorflow.aprendizaje()
+        Tensor=Tensorflow()
+        Tensor.inicio()
+        Tensor.aprendizaje()
 
 if __name__=="__main__":
     Tensorflow.ejecutar()

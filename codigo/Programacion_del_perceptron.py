@@ -21,6 +21,8 @@ from numpy import exp, array, random
 import matplotlib.pyplot as plt
 
 
+
+
 class Perceptron:
 
 
@@ -70,36 +72,42 @@ class Perceptron:
 
     def cantidadEpocas(self):
         #Cantidad de épocas
-        self.epochs = 300000
+        self.epochs = 10000
 
 
     #--------------------------------------
     #       FUNCIONES ÚTILES
     #--------------------------------------
 
-
-
+    @staticmethod
     def suma_ponderada(X1,W11,X2,W21,B,WB):
         return (B*WB+( X1*W11 + X2*W21))
 
+    @staticmethod
     def funcion_activacion_sigmoide(valor_suma_ponderada):
         return (1 / (1 + exp(-valor_suma_ponderada)))
 
+    @staticmethod
     def funcion_activacion_relu(valor_suma_ponderada):
         return (max(0,valor_suma_ponderada))
 
+    @staticmethod
     def error_lineal(valor_esperado, valor_predicho):
         return (valor_esperado-valor_predicho)
 
+    @staticmethod
     def calculo_gradiente(valor_entrada,prediccion,error):
         return (-1 * error * prediccion * (1-prediccion) * valor_entrada)
 
+    @staticmethod
     def calculo_valor_ajuste(valor_gradiente, tasa_aprendizaje):
         return (valor_gradiente*tasa_aprendizaje)
 
+    @staticmethod
     def calculo_nuevo_peso (valor_peso, valor_ajuste):
         return (valor_peso - valor_ajuste)
 
+    @staticmethod
     def calculo_MSE(predicciones_realizadas, predicciones_esperadas):
         i=0;
         suma=0;
@@ -109,7 +117,6 @@ class Perceptron:
             suma = suma + cuadradoDiferencia
         media_cuadratica = 1 / (len(predicciones_esperadas)) * suma
         return media_cuadratica
-
 
     #--------------------------------------
     #       GRÁFICA
@@ -140,44 +147,44 @@ class Perceptron:
                 self.valor_esperado = self.predicciones[self.numObservacion][0]
 
                 #Etapa 1: Cálculo de la suma ponderada
-                self.valor_suma_ponderada = self.suma_ponderada(self.x1,self.w11,self.x2,self.w21,self.sesgo,self.wb)
+                self.valor_suma_ponderada = Perceptron.suma_ponderada(self.x1,self.w11,self.x2,self.w21,self.sesgo,self.wb)
 
 
                 #Etapa 2: Aplicación de la función de activación
-                self.valor_predicho = self.funcion_activacion_sigmoide(self.valor_suma_ponderada)
+                self.valor_predicho = Perceptron.funcion_activacion_sigmoide(self.valor_suma_ponderada)
 
 
                 #Etapa 3: Cálculo del error
-                self.valor_error = self.error_lineal(self.valor_esperado,self.valor_predicho)
+                self.valor_error = Perceptron.error_lineal(self.valor_esperado,self.valor_predicho)
 
 
                 #Actualización del peso 1
                 #Cálculo ddel gradiente del valor de ajuste y del peso nuevo
-                self.gradiente_W11 = self.calculo_gradiente(self.x1,self.valor_predicho,self.valor_error)
-                self.valor_ajuste_W11 = self.calculo_valor_ajuste(self.gradiente_W11,self.txAprendizaje)
-                self.w11 = self.calculo_nuevo_peso(self.w11,self.valor_ajuste_W11)
+                self.gradiente_W11 = Perceptron.calculo_gradiente(self.x1,self.valor_predicho,self.valor_error)
+                self.valor_ajuste_W11 =Perceptron.calculo_valor_ajuste(self.gradiente_W11,self.txAprendizaje)
+                self.w11 = Perceptron.calculo_nuevo_peso(self.w11,self.valor_ajuste_W11)
 
                 # Actualización del peso 2
-                self.gradiente_W21 = self.calculo_gradiente(self.x2, self.valor_predicho, self.valor_error)
-                self.valor_ajuste_W21 = self.calculo_valor_ajuste(self.gradiente_W21, self.txAprendizaje)
-                self.w21 = self.calculo_nuevo_peso(self.w21, self.valor_ajuste_W21)
+                self.gradiente_W21 = Perceptron.calculo_gradiente(self.x2, self.valor_predicho, self.valor_error)
+                self.valor_ajuste_W21 = Perceptron.calculo_valor_ajuste(self.gradiente_W21, self.txAprendizaje)
+                self.w21 = Perceptron.calculo_nuevo_peso(self.w21, self.valor_ajuste_W21)
 
 
                 # Actualización del peso del sesgo
-                self.gradiente_Wb = self.calculo_gradiente(self.sesgo, self.valor_predicho, self.valor_error)
-                self.valor_ajuste_Wb = self.calculo_valor_ajuste(self.gradiente_Wb, self.txAprendizaje)
-                self.wb = self.calculo_nuevo_peso(self.wb, self.valor_ajuste_Wb)
+                self.gradiente_Wb = Perceptron.calculo_gradiente(self.sesgo, self.valor_predicho, self.valor_error)
+                self.valor_ajuste_Wb = Perceptron.calculo_valor_ajuste(self.gradiente_Wb, self.txAprendizaje)
+                self.wb = Perceptron.calculo_nuevo_peso(self.wb, self.valor_ajuste_Wb)
 
                 print("     EPOCH (" + str(epoch) + "/" + str(self.epochs) + ") -  Observación: " + str(self.numObservacion+1) + "/" + str(len(self.observaciones_entradas)))
 
                 #Almacenamiento de la predicción realizada:
                 self.predicciones_realizadas_durante_epoch.append(self.valor_predicho)
-                self.predicciones_esperadas.append(self.predicciones[numObservacion][0])
+                self.predicciones_esperadas.append(self.predicciones[self.numObservacion][0])
 
                 #Paso a la observación siguiente
                 self.numObservacion = self.numObservacion+1
 
-            self.MSE = self.calculo_MSE(self.predicciones_realizadas_durante_epoch, self.predicciones)
+            self.MSE = Perceptron.calculo_MSE(self.predicciones_realizadas_durante_epoch, self.predicciones)
             self.Grafica_MSE.append(self.MSE[0])
             print("MSE: "+str(self.MSE))
 
@@ -210,44 +217,36 @@ class Perceptron:
 
     def etapa1(self):
         #Etapa 1: Cálculo de la suma ponderada
-        self.valor_suma_ponderada = self.suma_ponderada(self.x1,self.w11,self.x2,self.w21,self.sesgo,self.wb)
+        self.valor_suma_ponderada = Perceptron.suma_ponderada(self.x1,self.w11,self.x2,self.w21,self.sesgo,self.wb)
 
     def etapa2(self):
         #Etapa 2: Aplicación de la función de activación
-        self.valor_predicho = self.funcion_activacion_sigmoide(self.valor_suma_ponderada)
+        self.valor_predicho = Perceptron.funcion_activacion_sigmoide(self.valor_suma_ponderada)
 
         print("Predicción del [" + str(self.x1) + "," + str(self.x2)  + "]")
         print("Predicción = " + str(self.valor_predicho))
 
+    def inicio(self):
+        self.generacionPesos()
+        self.sesgo()
+        self.almacenamiento()
+        self.tasaAprendizaje()
+        self.cantidadEpocas()
 
-    @staticmethod
-    def inicio():
-        Perceptron.generacionPesos()
-        Perceptron.sesgo()
-        Perceptron.almacenamiento()
-        Perceptron.tasaAprendizaje()
-        Perceptron.cantidadEpocas()
-        Perceptron.suma_ponderada()
-        Perceptron.funcion_activacion_sigmoide()
-        Perceptron.funcion_activacion_relu()
-        Perceptron.error_lineal()
-        Perceptron.calculo_gradiente()
-        Perceptron.calculo_valor_ajuste()
-        Perceptron.calculo_nuevo_peso()
-        Perceptron.calculo_MSE()
-
-    @staticmethod
-    def aprendizaje():
-        Perceptron.grafica2()
-        Perceptron.aprendizaje2()
-        Perceptron.mostrar()
-        Perceptron.etapa1()
-        Perceptron.etapa2()
+    def aprendizaje(self):
+        self.grafica2()
+        self.aprendizaje2()
+        self.mostrar()
+        self.etapa1()
+        self.etapa2()
 
     @staticmethod
     def ejecutar():
-        Perceptron.inicio()
-        Perceptron.aprendizaje()
+        Percept=Perceptron()
+        Percept.inicio()
+        Percept.aprendizaje()
+
+    
 
 
 if __name__=="__main__":
